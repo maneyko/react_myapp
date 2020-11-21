@@ -2,6 +2,8 @@
 
 Sample React application.
 
+Live demo: <https://react.maneyko.com/>
+
 To run:
 
 ```bash
