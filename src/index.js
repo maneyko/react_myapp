@@ -83,7 +83,7 @@ class Response extends React.Component {
       date: new Date()
     })
 
-    if (moment().second() % 5 != 0) {
+    if (moment().second() % 5 !== 0) {
       return null;
     }
     // fetch("https://maneyko.com/rails/echo", {
