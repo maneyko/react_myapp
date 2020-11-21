@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+var moment = require("moment");
+
 const user = {
   name: {
     first: "Peter",
@@ -71,14 +73,22 @@ class Response extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
+      date: new Date(),
       data: {}
     };
   }
 
   tick() {
+    this.setState({
+      date: new Date()
+    })
+
+    if (moment().second() % 5 != 0) {
+      return null;
+    }
     // fetch("https://maneyko.com/rails/echo", {
     var randomString = btoa(Math.random()).substr(10, 5);
-    fetch(`https://maneyko.com/rails/echo?str=${randomString}`)
+    fetch(`https://maneyko.com/rails/echo?str=${randomString}&sent_at=${moment().toISOString(true)}`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -86,6 +96,7 @@ class Response extends React.Component {
             error: null,
             isLoaded: true,
             data: result.data,
+            processed_at: moment().toISOString(true)
           });
         },
         (error) => {
@@ -103,7 +114,7 @@ class Response extends React.Component {
 
     this.timerID = setInterval(
       () => this.tick(),
-      5000
+      1000
     );
   }
 
@@ -114,11 +125,26 @@ class Response extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <p>
-          Random string: <code>{this.state.data.str}</code>
-          <br/>
-          Timestamp from server: {this.state.data.timestamp}
-        </p>
+        <table>
+          <tbody>
+            <tr>
+              <td>Random string:</td>
+              <td><code>{this.state.data.str}</code></td>
+            </tr>
+            <tr>
+              <td>Request to server sent at:</td>
+              <td><code>{this.state.data.sent_at}</code></td>
+            </tr>
+            <tr>
+              <td>Timestamp from server:</td>
+              <td><code>{this.state.data.timestamp}</code></td>
+            </tr>
+            <tr>
+              <td>Rendered at:</td>
+              <td><code>{this.state.processed_at}</code></td>
+            </tr>
+          </tbody>
+        </table>
       </React.Fragment>
     );
   }

@@ -29,10 +29,6 @@ CMD="cd $APP_ROOT && npm start"
 # make sure the app exists
 cd $APP_ROOT || exit 1
 
-sig () {
-  test -s "$PID" && kill -$1 `cat $PID`
-}
-
 app_start() {
   pgrep node && echo >&2 "Already running" && exit 0
   echo "Starting $APP_NAME"
