@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+var $ = require("jquery");
 var moment = require("moment");
 
 const user = {
@@ -88,27 +89,32 @@ class Response extends React.Component {
     if (moment().unix() % this.state.update_frequency !== 0) {
       return null;
     }
-    // fetch("https://maneyko.com/rails/echo", {
+
     var randomString = btoa(Math.random()).substr(10, 5);
-    fetch(`https://maneyko.com/rails/echo?str=${randomString}&sent_at=${moment().toISOString(true)}`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            error: null,
-            isLoaded: true,
-            data: result.data,
-            processed_at: moment().toISOString(true)
-          });
-        },
-        (error) => {
-          this.setState({
-            error: true,
-            isLoaded: false,
-            data: {str: ""}
-          });
-        }
-      );
+
+    $.ajax({
+      method: "GET",
+      url: "https://maneyko.com/rails/echo",
+      data: {
+        str: randomString,
+        sent_at: moment().toISOString(true)
+      },
+      success: (res) => {
+        this.setState({
+          error: null,
+          isLoaded: true,
+          data: res.data,
+          processed_at: moment().toISOString(true)
+        })
+      }
+    })
+    .fail(() => {
+      this.setState({
+        error: true,
+        isLoaded: false,
+        data: {str: ""}
+      })
+    });
   }
 
   componentDidMount() {
