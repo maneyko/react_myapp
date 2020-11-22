@@ -74,8 +74,10 @@ class Response extends React.Component {
       error: null,
       isLoaded: false,
       date: new Date(),
-      data: {}
+      data: {},
+      update_frequency: 5
     };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   tick() {
@@ -83,7 +85,7 @@ class Response extends React.Component {
       date: new Date()
     })
 
-    if (moment().second() % 5 !== 0) {
+    if (moment().unix() % this.state.update_frequency !== 0) {
       return null;
     }
     // fetch("https://maneyko.com/rails/echo", {
@@ -122,11 +124,21 @@ class Response extends React.Component {
     clearInterval(this.timerID);
   }
 
+  handleChange(event) {
+    this.setState({update_frequency: event.target.value})
+  }
+
   render() {
     return (
       <React.Fragment>
         <table>
           <tbody>
+            <tr>
+              <td>Update every:</td>
+              <td>
+                <input type="text" value={this.state.update_frequency} name="update_frequency" onChange={this.handleChange} /> seconds
+              </td>
+            </tr>
             <tr>
               <td>Random string:</td>
               <td><code>{this.state.data.str}</code></td>
