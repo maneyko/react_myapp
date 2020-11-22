@@ -134,10 +134,21 @@ class Response extends React.Component {
         <table>
           <tbody>
             <tr>
-              <td>Update every:</td>
+              <td>Request every:</td>
               <td>
-                <input type="text" value={this.state.update_frequency} name="update_frequency" onChange={this.handleChange} /> seconds
+                <input
+                  inputMode="numeric"
+                  type="text"
+                  className="update-frequency form-control"
+                  value={this.state.update_frequency}
+                  name="update_frequency"
+                  onChange={this.handleChange}
+                /> seconds
               </td>
+            </tr>
+            <tr>
+              <td><br/></td>
+              <td>{!this.state.update_frequency.toString().match(/^(\d+)?$/) && <span className="input-warning">Input must be an integer</span>}</td>
             </tr>
             <tr>
               <td>Random string:</td>
